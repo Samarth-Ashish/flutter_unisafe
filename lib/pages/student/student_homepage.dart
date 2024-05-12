@@ -2,7 +2,7 @@
 
 // // import 'package:flutter/material.dart';
 // // import 'package:flutter_works/MyReportsPage.dart';
-// // import 'package:flutter_works/ProgressReportPage.dart';
+// // import 'package:flutter_works/RecentReportsPage.dart';
 // // import 'package:flutter_works/faq.dart';
 // // import 'package:flutter_works/pageone.dart';
 // // import 'package:flutter_works/stories.dart';
@@ -311,7 +311,7 @@
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_works/MyReportsPage.dart';
-// import 'package:flutter_works/ProgressReportPage.dart';
+// import 'package:flutter_works/RecentReportsPage.dart';
 // import 'package:flutter_works/faq.dart';
 // import 'package:flutter_works/pageone.dart';
 // import 'package:flutter_works/stories.dart';
@@ -336,7 +336,7 @@
 //       _buildCard(context, Icons.donut_large, 'Progress Report', () {
 //         Navigator.push(
 //           context,
-//           MaterialPageRoute(builder: (context) => ProgressReportPage(studentId: '122212')),
+//           MaterialPageRoute(builder: (context) => RecentReportsPage(studentId: '122212')),
 //         );
 //       }),
 //       _buildCard(context, Icons.star, 'Old reports', () {
@@ -578,7 +578,7 @@
 import 'package:flutter/material.dart';
 import '../login/google_login_handler.dart';
 import 'MyReportsPage.dart';
-import 'show_my_reports_page.dart';
+import 'recent_reports.dart';
 import 'faq.dart';
 import 'file_report_page.dart';
 import 'stories.dart';
@@ -601,11 +601,11 @@ class _StudentHomePageState extends State<StudentHomePage> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final List<Widget> cards = [
-      _buildCard(context, Icons.donut_large, 'Progress Report', () {
+      _buildCard(context, Icons.donut_large, 'Recent Reports', () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProgressReportPage(
+              builder: (context) => RecentReportsPage(
                     userCredential: widget.userCredential,
                   )),
         );

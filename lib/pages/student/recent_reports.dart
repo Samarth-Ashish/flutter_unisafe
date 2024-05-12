@@ -3,10 +3,10 @@
 // // // // // No changes needed, the import statement is correct
 // // // // import 'package:fl_chart/fl_chart.dart';
 
-// // // // class ProgressReportPage extends StatelessWidget {
+// // // // class RecentReportsPage extends StatelessWidget {
 // // // //   final String studentId;
 
-// // // //   ProgressReportPage({required this.studentId});
+// // // //   RecentReportsPage({required this.studentId});
 
 // // // //   Widget _buildCard(BuildContext context, IconData icon, String label, String studentId) {
 // // // //     return Card(
@@ -91,10 +91,10 @@
 // // // // import 'package:cloud_firestore/cloud_firestore.dart';
 // // // // import 'package:fl_chart/fl_chart.dart';
 
-// // // // class ProgressReportPage extends StatelessWidget {
+// // // // class RecentReportsPage extends StatelessWidget {
 // // // //   final String studentId;
 
-// // // //   ProgressReportPage({required this.studentId});
+// // // //   RecentReportsPage({required this.studentId});
 
 // // // //   Widget _buildCard(BuildContext context, IconData icon, String label, String studentId) {
 // // // //     return Card(
@@ -186,10 +186,10 @@
 // // // import 'package:cloud_firestore/cloud_firestore.dart';
 // // // import 'package:fl_chart/fl_chart.dart';
 
-// // // class ProgressReportPage extends StatelessWidget {
+// // // class RecentReportsPage extends StatelessWidget {
 // // //   final String studentId;
 
-// // //   ProgressReportPage({required this.studentId});
+// // //   RecentReportsPage({required this.studentId});
 
 // // //   Widget _buildCard(BuildContext context, IconData icon, String label, String studentId) {
 // // //     return Card(
@@ -279,22 +279,22 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class ProgressReportPage extends StatefulWidget {
+class RecentReportsPage extends StatefulWidget {
   final ValueNotifier userCredential;
-  const ProgressReportPage({super.key, required this.userCredential});
+  const RecentReportsPage({super.key, required this.userCredential});
 
   @override
-  State<ProgressReportPage> createState() => _ProgressReportPageState();
+  State<RecentReportsPage> createState() => _RecentReportsPageState();
 }
 
-class _ProgressReportPageState extends State<ProgressReportPage> {
+class _RecentReportsPageState extends State<RecentReportsPage> {
   late bool _isPending;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Progress Reports'),
+        title: const Text('Recent Reports'),
       ),
       backgroundColor: const Color.fromRGBO(247, 246, 244, 1), // Set background color of the Scaffold
       body: StreamBuilder<QuerySnapshot>(
@@ -312,7 +312,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const ListTile(
               leading: Icon(Icons.donut_large),
-              title: Text('Progress Report'),
+              title: Text('Report Progress'),
               subtitle: Text('No reports'),
             );
           }
@@ -336,7 +336,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         children: [
           ListTile(
             leading: const Icon(Icons.donut_large),
-            title: const Text('Progress Report'),
+            title: const Text('Report Progress'),
             subtitle: Text(_isPending ? 'Decision Pending' : 'Resolved'),
           ),
           SizedBox(
