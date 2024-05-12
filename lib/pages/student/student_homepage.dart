@@ -577,7 +577,7 @@
 
 import 'package:flutter/material.dart';
 import '../login/google_login_handler.dart';
-import 'MyReportsPage.dart';
+import 'resolved_reports.dart';
 import 'recent_reports.dart';
 import 'faq.dart';
 import 'file_report_page.dart';
@@ -718,7 +718,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                 final List<String> labels = [
                   "Report Incident",
                   "Support",
-                  "My reports",
+                  "Resolved Reports",
                   "Settings",
                   "Anonymous Tip",
                   "Stories",
@@ -787,11 +787,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
         break;
       case 2:
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyReportsPage(
-                      userCredential: widget.userCredential,
-                    )));
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyReportsPage(
+              userCredential: widget.userCredential,
+            ),
+          ),
+        );
         break;
       case 4:
         Navigator.push(context, MaterialPageRoute(builder: (context) => TipsPage()));

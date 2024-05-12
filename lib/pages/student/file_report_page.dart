@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_unisafe/pages/student/student_homepage.dart';
 
 class FileReportPage extends StatefulWidget {
   final ValueNotifier userCredential;
@@ -64,7 +63,7 @@ class _FileReportPageState extends State<FileReportPage> {
       try {
         await FirebaseFirestore.instance.collection('reports').add(data);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Report submitted successfully')));
-        // Navigator.pop(context);
+        Navigator.pop(context);
       } catch (e) {
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to submit report: $e')));
         // Navigator.pop(context);
