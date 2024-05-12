@@ -6,13 +6,19 @@ class ThemeProvider extends ChangeNotifier {
   late ThemeData currentTheme;
 
   ThemeData lightTheme = ThemeData(
-    // scaffoldBackgroundColor: Colors.white70,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.orangeAccent,
-      brightness: Brightness.light,
-      // primary: Colors.pink,
-      // background: Colors.redAccent,
-    ),
+    colorScheme: const ColorScheme.light().copyWith(primary: Colors.red),
+    //
+    //
+    // primarySwatch: Colors.red,
+    // brightness: Brightness.light,
+    // colorScheme: ColorScheme.fromSeed(
+    //   seedColor: Colors.orangeAccent,
+    //   brightness: Brightness.light,
+    //   // primary: Colors.pink,
+    //   // background: Colors.redAccent,
+    // ),
+    //
+    //
     useMaterial3: true,
     // iconTheme: const IconThemeData(
     //   color: Colors.deepOrange,
@@ -20,11 +26,12 @@ class ThemeProvider extends ChangeNotifier {
     // scaffoldBackgroundColor: Colors.red,
   );
   ThemeData darkTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.blue,
-      brightness: Brightness.dark,
-      // background: Colors.redAccent,
-    ),
+    colorScheme: const ColorScheme.dark().copyWith(primary: Colors.red),
+    // colorScheme: ColorScheme.fromSeed(
+    //   seedColor: Colors.blue,
+    //   brightness: Brightness.dark,
+    //   // background: Colors.redAccent,
+    // ),
     useMaterial3: true,
     // iconTheme: const IconThemeData(
     //   color: Colors.yellow,
@@ -83,18 +90,12 @@ class ThemeProvider extends ChangeNotifier {
 
   //
 
-  Color? colorOfThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color,
-      [double amount = .1, Color? defaultColor]) {
-    return condition
-        ? colorOfThemeBrightness(color, amount, defaultColor)
-        : colorOfAntiThemeBrightness(color, amount, defaultColor);
+  Color? colorOfThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color, [double amount = .1, Color? defaultColor]) {
+    return condition ? colorOfThemeBrightness(color, amount, defaultColor) : colorOfAntiThemeBrightness(color, amount, defaultColor);
   }
 
-  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color,
-      [double amount = .1, Color? defaultColor]) {
-    return condition
-        ? colorOfAntiThemeBrightness(color, amount, defaultColor)
-        : colorOfThemeBrightness(color, amount, defaultColor);
+  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color, [double amount = .1, Color? defaultColor]) {
+    return condition ? colorOfAntiThemeBrightness(color, amount, defaultColor) : colorOfThemeBrightness(color, amount, defaultColor);
   }
 
   //

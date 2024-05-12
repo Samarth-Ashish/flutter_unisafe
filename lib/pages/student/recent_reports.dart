@@ -278,6 +278,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 class RecentReportsPage extends StatefulWidget {
   final ValueNotifier userCredential;
@@ -290,39 +291,79 @@ class RecentReportsPage extends StatefulWidget {
 class _RecentReportsPageState extends State<RecentReportsPage> {
   late bool _isPending;
 
+  String _formatTimestampToDate(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+  }
+
+  String _formatTimestampToTime(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return '${dateTime.hour}:${dateTime.minute}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recent Reports'),
       ),
-      backgroundColor: const Color.fromRGBO(247, 246, 244, 1), // Set background color of the Scaffold
+      // backgroundColor: const Color.fromRGBO(247, 246, 244, 1), // Set background color of the Scaffold
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('reports')
             .where('reportedFromEmail', isEqualTo: widget.userCredential.value.user!.email!.toString())
+            .orderBy('submittedAt', descending: true) // Order by latest timestamp
+            .limit(1) // Get only the first document (latest)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
+          } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const ListTile(
-              leading: Icon(Icons.donut_large),
-              title: Text('Report Progress'),
-              subtitle: Text('No reports'),
+          // if (!snapshot.hasData || snapshot.data!.docs.isEmpty)
+          else {
+            // return const ListTile(
+            //   leading: Icon(Icons.donut_large),
+            //   title: Text('Report Progress'),
+            //   subtitle: Text('No reports'),
+            // );
+            final reportData = snapshot.data!.docs[0].data() as Map<String, dynamic>;
+            if (reportData == {}) {
+              return const Text('No reports found.');
+            }
+            // return recentReport(reportData);
+            return Card(
+              margin: const EdgeInsets.all(8.0),
+              child: ListTile(
+                title: Text('Incident :  ${reportData['reportIncident']}'),
+                subtitle: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Name : ${reportData['name']}'),
+                    Text('Email : ${reportData['email']}'),
+                  ],
+                ),
+                trailing: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Submitted At'),
+                    // SizedBox(width: 5, child: Divider(thickness: 1,)),
+                    Text(_formatTimestampToDate(reportData['submittedAt'])),
+                    Text(_formatTimestampToTime(reportData['submittedAt'])),
+                  ],
+                ),
+              ),
             );
           }
 
-          // Get the latest report submitted by the student
-          var latestReport = snapshot.data!.docs.last;
-          // debugPrint(latestReport);
-          _isPending = latestReport['decisionPending'];
+          // // Get the latest report submitted by the student
+          // var latestReport = snapshot.data!.docs.last;
+          // // debugPrint(latestReport);
+          // _isPending = latestReport['decisionPending'];
 
-          return _buildCard();
+          // return _buildCard();
         },
       ),
     );
@@ -339,34 +380,38 @@ class _RecentReportsPageState extends State<RecentReportsPage> {
             title: const Text('Report Progress'),
             subtitle: Text(_isPending ? 'Decision Pending' : 'Resolved'),
           ),
-          SizedBox(
-            height: 200,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20), // Adjust the top padding as needed
-              child: PieChart(
-                PieChartData(
-                  sections: [
-                    PieChartSectionData(
-                      color: _isPending ? Colors.blue : Colors.green,
-                      value: _isPending ? 1 : 0,
-                      title: 'Pending',
-                      radius: 80,
-                      titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                    PieChartSectionData(
-                      color: _isPending ? Colors.green : Colors.blue,
-                      value: _isPending ? 0 : 1,
-                      title: 'Resolved',
-                      radius: 80,
-                      titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // SizedBox(
+          //   height: 200,
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(top: 20), // Adjust the top padding as needed
+          //     child: PieChart(
+          //       PieChartData(
+          //         sections: [
+          //           PieChartSectionData(
+          //             color: _isPending ? Colors.blue : Colors.green,
+          //             value: _isPending ? 1 : 0,
+          //             title: 'Pending',
+          //             radius: 80,
+          //             titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+          //           ),
+          //           PieChartSectionData(
+          //             color: _isPending ? Colors.green : Colors.blue,
+          //             value: _isPending ? 0 : 1,
+          //             title: 'Resolved',
+          //             radius: 80,
+          //             titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
+  }
+
+  Widget recentReport(Map reportData) {
+    return Text(reportData["name"]);
   }
 }

@@ -576,11 +576,12 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_unisafe/pages/student/all_reports.dart';
 import '../login/google_login_handler.dart';
 import 'resolved_reports.dart';
 import 'recent_reports.dart';
 import 'faq.dart';
-import 'file_report_page.dart';
+import 'file_report_incident.dart';
 import 'stories.dart';
 import 'tips.dart';
 import 'package:provider/provider.dart';
@@ -610,8 +611,14 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   )),
         );
       }),
-      _buildCard(context, Icons.star, 'Old reports', () {
-        // Your code to handle tap on other cards
+      _buildCard(context, Icons.star, 'All reports', () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AllReportsPage(
+                    userCredential: widget.userCredential,
+                  )),
+        );
       }),
       // Add other cards as needed
     ];

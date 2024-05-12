@@ -76,12 +76,12 @@ class _FileReportPageState extends State<FileReportPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Report Incident'),
-        backgroundColor: const Color.fromARGB(255, 219, 165, 228),
+        // backgroundColor: 
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 225, 187, 231),
+          // color: Color.fromARGB(255, 225, 187, 231),
         ),
         child: Form(
           key: _formKey,
