@@ -1,94 +1,122 @@
-// everything is fine but in student reports it says bottom overflowed by 1.4 pixel solve it
-
+//admin_dashboard.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_unisafe/models/theme_provider.dart';
+import 'package:flutter_unisafe/pages/admin/admins_management.dart';
+import 'package:flutter_unisafe/pages/admin/contact_us.dart';
+import 'package:flutter_unisafe/pages/admin/obligations.dart';
 import '../login/google_login_handler.dart';
-import 'get_reports_page.dart';
-
-// class AdminDashboard extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Admin Dashboard',
-//       theme: ThemeData(
-//         primaryColor: Colors.blue,
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//       ),
-//       home: AdminDashboard(),
-//     );
-//   }
-// }
+import 'student_reports.dart';
 
 class AdminDashboard extends StatefulWidget {
   final ValueNotifier userCredential;
   final int block;
-  const AdminDashboard({super.key, required this.userCredential, required this.block});
+  const AdminDashboard(
+      {super.key, required this.userCredential, required this.block});
 
   @override
   State<AdminDashboard> createState() => _AdminDashboardState();
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
+  int? selectedBlock;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        backgroundColor: Colors.orange, // Stylish app bar color
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              // Navigate to settings page or open settings modal
-            },
-          ),
-        ],
+        centerTitle: true,
+        // actions: themeSwitchWithIcons(context),
+        title: const Text(
+          'ADMIN DASHBOARD',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.green.shade700.withOpacity(0.7),
       ),
       drawer: Drawer(
         child: Container(
-          color: const Color.fromARGB(255, 225, 187, 231),
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const UserAccountsDrawerHeader(
-                accountName: Text("LPU"),
-                accountEmail: Text("abc@gmail.com"),
-                currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.orange,
-                  child: Text(
-                    "L",
-                    style: TextStyle(fontSize: 40.0),
+              UserAccountsDrawerHeader(
+                accountName: Text(
+                  widget.userCredential.value.user!.displayName!.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    // color: Colors.black, // Change text color to a darker shade of orange
                   ),
+                ),
+                accountEmail: Text(
+                  widget.userCredential.value.user!.email!.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    // color: Colors.orange
+                    //     .shade700, // Change text color to a medium shade of orange
+                  ),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(
+                    widget.userCredential.value.user!.photoURL!.toString(),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade700,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 5,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text("Home"),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text("Settings"),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
                 leading: const Icon(Icons.contacts),
-                title: const Text("Contact Us"),
+                title: Text(
+                  "Contact Us",
+                  style: TextStyle(
+                      color: Colors.green.shade600,
+                      fontWeight: FontWeight.bold),
+                ),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ContactUsAdminPage(), // Now fetching reports from Firestore
+                    ),
+                  );
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.logout),
-                title: const Text("LogOut"),
+                title: Text(
+                  "LogOut",
+                  style: TextStyle(
+                      color: Colors.green.shade600,
+                      fontWeight: FontWeight.bold),
+                ),
                 onTap: () async {
                   Navigator.pop(context); //routes
                   bool result = await signOutFromGoogle();
                   if (result) widget.userCredential.value = '';
                 },
+              ),
+              ListTile(
+                leading: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ...themeSwitchWithIcons(context),
+                  ],
+                ),
+                title: Text(
+                  'Theme',
+                  style: TextStyle(
+                      color: Colors.green.shade600,
+                      fontWeight: FontWeight.bold),
+                ),
+                onTap: () async {},
               )
             ],
           ),
@@ -98,14 +126,40 @@ class _AdminDashboardState extends State<AdminDashboard> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
-              'Block ${widget.block}',
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            (widget.block != 0)
+                ? Text(
+                    'Block ${widget.block}',
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: DropdownButton<int>(
+                      value: selectedBlock,
+                      hint: const Text('Select Block'),
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          selectedBlock = newValue;
+                        });
+                      },
+                      items: [
+                        const DropdownMenuItem<int>(
+                          value: 0,
+                          child: Text('All Blocks'),
+                        ),
+                        ...List<DropdownMenuItem<int>>.generate(
+                          56,
+                          (index) => DropdownMenuItem(
+                            value: index + 1,
+                            child: Text('Block ${index + 1}'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
             const SizedBox(
               height: 10,
             ),
@@ -117,35 +171,51 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 children: <Widget>[
                   // In DashboardCard where you define the 'Student Reports' card
                   DashboardCard(
-                    icon: Icons.report,
+                    icon: Icons.description,
                     title: 'Student Reports',
                     color: Colors.orange,
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StudentReportPage(block: widget.block), // Now fetching reports from Firestore
+                          builder: (context) => StudentReportPage(
+                            block: (widget.block != 0)
+                                ? widget.block
+                                : selectedBlock ?? 0,
+                          ), // Now fetching reports from Firestore
                         ),
                       );
                     },
                   ),
                   DashboardCard(
-                    icon: Icons.report,
+                    icon: Icons.checklist,
                     title: 'Obligations',
                     color: const Color.fromARGB(255, 64, 182, 60),
                     onPressed: () {
-                      // Navigate to student reports page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdminObligationsPage()),
+                      );
                     },
                   ),
-                  DashboardCard(
-                    icon: Icons.event_note,
-                    title: 'Events',
-                    color: Colors.purple,
-                    onPressed: () {
-                      // Navigate to events page
-                    },
-                  ),
-                  // Add more cards here
+                  if (widget.block == 0)
+                    DashboardCard(
+                      icon: Icons.event_note,
+                      title: 'Admins Management',
+                      color: Colors.purple,
+                      onPressed: () {
+                        // Navigate to events page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AdminManagementPage(
+                              userCredential: widget.userCredential,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
@@ -206,13 +276,21 @@ class _DashboardCardState extends State<DashboardCard> {
                 ],
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(widget.icon, size: 70.0, color: Colors.white),
             const SizedBox(height: 10),
-            Text(
-              widget.title,
-              style: const TextStyle(fontSize: 18.0, color: Colors.white),
+            Center(
+              child: Text(
+                widget.title,
+                textAlign:
+                    TextAlign.center, // Align text in the center horizontally
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),
