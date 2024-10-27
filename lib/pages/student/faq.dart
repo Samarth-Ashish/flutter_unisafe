@@ -1,4 +1,4 @@
-
+//faq.dart
 import 'package:flutter/material.dart';
 
 class FAQPage extends StatelessWidget {
@@ -32,16 +32,20 @@ class FAQPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.deepOrange.withOpacity(0.7),
         title: Text('FAQ'),
       ),
       body: Container(
-        color: Colors.grey[200], // Background color
+        // color: Colors.grey[200], // Background color
         child: ListView.builder(
           itemCount: _questions.length,
           itemBuilder: (context, index) {
             return Card(
-              elevation: 3, // Elevation for card shadow
-              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Margin around each card
+              elevation: 6, // Elevation for card shadow
+              shadowColor: Colors.grey.shade700,
+              margin: EdgeInsets.symmetric(
+                  vertical: 8, horizontal: 16), // Margin around each card
               child: ExpansionTile(
                 title: Text(
                   _questions[index],
@@ -54,7 +58,7 @@ class FAQPage extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       _answers[index],
-                      style: TextStyle(color: Colors.black87), // Text color
+                      // style: TextStyle(color: Colors.black87), // Text color
                     ),
                   ),
                 ],
@@ -65,10 +69,4 @@ class FAQPage extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: FAQPage(),
-  ));
 }

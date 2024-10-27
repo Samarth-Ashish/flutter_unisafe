@@ -1,4 +1,6 @@
+//theme_provider.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -6,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
   late ThemeData currentTheme;
 
   ThemeData lightTheme = ThemeData(
-    colorScheme: const ColorScheme.light().copyWith(primary: Colors.red),
+    colorScheme: const ColorScheme.light().copyWith(),
     //
     //
     // primarySwatch: Colors.red,
@@ -26,7 +28,9 @@ class ThemeProvider extends ChangeNotifier {
     // scaffoldBackgroundColor: Colors.red,
   );
   ThemeData darkTheme = ThemeData(
-    colorScheme: const ColorScheme.dark().copyWith(primary: Colors.red),
+    colorScheme: const ColorScheme.dark().copyWith(
+      
+    ),
     // colorScheme: ColorScheme.fromSeed(
     //   seedColor: Colors.blue,
     //   brightness: Brightness.dark,
@@ -41,7 +45,7 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeProvider() {
     isDark = false;
-    currentTheme = darkTheme;
+    currentTheme = lightTheme;
     loadThemePreference();
   }
 
@@ -81,21 +85,33 @@ class ThemeProvider extends ChangeNotifier {
     double amount = .1,
     Color? defaultColor,
   ]) {
-    return isDark ? darken(color ?? defaultColor, amount) : lighten(color ?? defaultColor, amount);
+    return isDark
+        ? darken(color ?? defaultColor, amount)
+        : lighten(color ?? defaultColor, amount);
   }
 
-  Color? colorOfAntiThemeBrightness(Color? color, [double amount = .1, Color? defaultColor]) {
-    return isDark ? lighten(color ?? defaultColor, amount) : darken(color ?? defaultColor, amount);
+  Color? colorOfAntiThemeBrightness(Color? color,
+      [double amount = .1, Color? defaultColor]) {
+    return isDark
+        ? lighten(color ?? defaultColor, amount)
+        : darken(color ?? defaultColor, amount);
   }
 
   //
 
-  Color? colorOfThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color, [double amount = .1, Color? defaultColor]) {
-    return condition ? colorOfThemeBrightness(color, amount, defaultColor) : colorOfAntiThemeBrightness(color, amount, defaultColor);
+  Color? colorOfThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color,
+      [double amount = .1, Color? defaultColor]) {
+    return condition
+        ? colorOfThemeBrightness(color, amount, defaultColor)
+        : colorOfAntiThemeBrightness(color, amount, defaultColor);
   }
 
-  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color, [double amount = .1, Color? defaultColor]) {
-    return condition ? colorOfAntiThemeBrightness(color, amount, defaultColor) : colorOfThemeBrightness(color, amount, defaultColor);
+  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(
+      bool condition, Color? color,
+      [double amount = .1, Color? defaultColor]) {
+    return condition
+        ? colorOfAntiThemeBrightness(color, amount, defaultColor)
+        : colorOfThemeBrightness(color, amount, defaultColor);
   }
 
   //
@@ -137,7 +153,8 @@ Color? lighten(Color? color, [double amount = .1]) {
 }
 
 // ! returnColorFromBrightnessOf
-Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Colors.grey}) {
+Color? returnColorFromBrightnessOf(
+    {Color? fromColor, Color colorToConvert = Colors.grey}) {
   if (fromColor == null) {
     return null;
   }
@@ -173,4 +190,47 @@ Widget themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
     value: !themeProvider.isDark,
     onChanged: (value) => themeProvider.toggleMode(),
   );
+}
+
+
+//themeSwitch
+Widget themeSwitch(BuildContext context) {
+  return Switch(
+    // inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+    // activeColor: Theme.of(context).colorScheme.onPrimary,
+    //
+    // inactiveTrackColor: Colors.black,
+    // activeTrackColor: Colors.grey,
+    //
+    inactiveTrackColor: const Color.fromARGB(255, 0, 36, 90),
+    // hoverColor: Colors.redAccent,
+    // inactiveThumbColor: Colors.grey,
+    activeTrackColor: Colors.orangeAccent,
+    //
+    value: !context.watch<ThemeProvider>().isDark,
+    // onChanged: (value) => themeProvider.toggleTheme(),
+    onChanged: (value) => context.read<ThemeProvider>().toggleMode(),
+  );
+}
+
+List<Widget> themeSwitchWithIcons(BuildContext context) {
+  return [
+    Icon(
+      Icons.dark_mode,
+      color: context.watch<ThemeProvider>().isDark ? Colors.blueAccent : null,
+      size: 20,
+    ),
+    SizedBox(
+      width: 50,
+      child: FittedBox(
+        fit: BoxFit.fill,
+        child: themeSwitch(context),
+      ),
+    ),
+    Icon(
+      Icons.light_mode,
+      color: context.watch<ThemeProvider>().isDark ? null : Colors.orangeAccent,
+      size: 20,
+    ),
+  ];
 }

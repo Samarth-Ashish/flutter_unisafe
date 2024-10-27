@@ -1,10 +1,16 @@
+// tips.dart
+
 import 'package:flutter/material.dart';
 
 class TipsPage extends StatelessWidget {
+  const TipsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.deepOrange.withOpacity(0.7),
         title: Text('Reporting Tips'),
       ),
       body: ListView(
@@ -47,8 +53,9 @@ class TipsPage extends StatelessWidget {
 
   Widget _buildTip(String title, String description) {
     return Card(
+      elevation: 6, // Elevation for card shadow
+      shadowColor: Colors.grey.shade700,
       margin: EdgeInsets.symmetric(vertical: 8.0),
-      elevation: 4.0,
       child: ListTile(
         title: Text(
           title,
